@@ -34,6 +34,29 @@ describe Admin::CategoriesController do
     end
   end
 
+  describe "test_new" do
+    before(:each) do
+      get :new
+    end
+
+    it 'should render template new with empty values' do
+      assert_template 'new'
+      assert_tag :tag => "table",
+        :attributes => {}
+    end
+  end
+
+  describe "test_create" do
+    before(:each) do
+      post :new, :id => Factory(:category).id
+    end
+
+    it "shoud create new category and go to index page" do
+      assert_response :redirect, :action => 'index'
+      (Category.count).should == 1
+    end
+  end
+
   it "test_update" do
     post :edit, :id => Factory(:category).id
     assert_response :redirect, :action => 'index'
@@ -48,7 +71,7 @@ describe Admin::CategoriesController do
 
     it 'should render destroy template' do
       assert_response :success
-      assert_template 'destroy'      
+      assert_template 'destroy'
     end
   end
 
@@ -62,5 +85,5 @@ describe Admin::CategoriesController do
 
     assert_raise(ActiveRecord::RecordNotFound) { Category.find(test_id) }
   end
-  
+
 end
